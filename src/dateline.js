@@ -17,7 +17,7 @@ function dateline(dt){
 	+ ":"
 	+ dt.getMinutes();
 
-    if (dt.getMinutes() == 0){
+    if (dt.getMinutes() === 0){
 	time = (1 + dt.getHours() % 12)
     }
 

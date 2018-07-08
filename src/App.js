@@ -133,12 +133,15 @@ class UrlForm extends Component {
 
     render() {
 	return (
-	        <form onSubmit={this.handleSubmit}>
+	        <form className="url-form" onSubmit={this.handleSubmit}>
 		<label>
-		API endpoint:
+		API endpoint: 
 	        <input type="text" value={this.state.value} onChange={this.handleChange} />
 		</label>
-		<input type="submit" value="Submit" />
+		<input type="submit" value="Update" />
+		<div className="hint">
+		(After change the API endpoint, start scrolling to fetch new stories)
+		</div>
 		</form>
 	);
     }
@@ -168,8 +171,9 @@ class App extends Component {
 		<div className="top-bar">
 		<img src={window.location.origin + "/img/mirrorlogo.png"} alt="CT Mirror Logo"/> 
 		</div>
-		<UrlForm url={this.state.url} updateUrl={this.updateUrl}/>
+
 		<div className="center-column">
+		<UrlForm url={this.state.url} updateUrl={this.updateUrl}/>		
 		<StoryList url={this.state.url}></StoryList>
 		</div>
 		</div>
