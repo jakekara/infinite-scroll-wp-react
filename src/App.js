@@ -10,7 +10,8 @@ class StoryList extends Component {
 	super(props)
 
 	this.state = {
-	    "url": props.url,
+	    "perPage":25,
+	    "url":props.url,
 	    "fetchedPages":[],
 	    "page":1,
 	    "posts":[],
@@ -25,36 +26,51 @@ class StoryList extends Component {
 	return (
 		<div className="story-list">
 		{
-		    posts.map(post =>
-			      <a href={post.link}>
+		    posts.map(
+			post =>
+			    <a href={post.link}>
 			      
-			      <div className="story-preview" key={post.id}>
-			      <div className="headline-group">
-			      <div className="read-status" />
+			    <div className="story-preview" key={post.id}>
+			    <div className="headline-group">
+			    <div className="read-status" />
 
-			      <span  className="headline" dangerouslySetInnerHTML={{ __html:post.title.rendered }} />
-			      </div>
-			      <div className="dateline">{dateline(new Date(post.date))}</div>
-			      </div>
-			      </a>
+			    <span  className="headline" dangerouslySetInnerHTML={{ __html:post.title.rendered }} />
+			    </div>
+			    <div className="dateline">{dateline(new Date(post.date))}</div>
+			    </div>
+			    </a>
 			      
-			     )
+		    )
 		}
-		</div>
+	    </div>
 	);
     }
+
+    checkUrl(){
+
+	if (this.props.url !== this.state.url){
+	    console.log("Fixing url and resetting posts");
+	    this.setState({"url":this.props.url,
+			   "posts":[],
+			   "fetchedPages":[],
+			   "page":1});
+	}
+
+    }	
 
     fetchStories(){
 
 	this.setState({"isLoading":true});
-		       
+	
 	if (this.state.fetchedPages.includes(this.state.page)) {
 	    return;
 	}
 
 	var that = this;
-	
-	fetch(this.state.url + "&page=" + this.state.page)
+
+	var goodUrl = this.props.url + "/posts" + "?per_page=" + this.state.perPage + "&page=" + this.state.page;
+	console.log("url", goodUrl);
+	fetch(goodUrl)
 	    .then(response => response.json())
 	    .then(function(data){
 		console.log(data)
@@ -69,17 +85,19 @@ class StoryList extends Component {
 
     onScroll = () => {
 
+	this.checkUrl();
+	
 	if (
 	    (window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 100)
-	    &&!this.state.isLoading
-	   ){
+		&&!this.state.isLoading
+	){
 	    this.fetchStories()
 	    
 	}
     }
     
     componentDidMount() {
-	// fetch(this.state.url)
+
 	this.fetchStories();
 
 	window.addEventListener('scroll', this.onScroll, false);
@@ -87,17 +105,75 @@ class StoryList extends Component {
     
 }
 
-class App extends Component {
+class UrlForm extends Component {
+    constructor(props){
+
+	super(props);
+	
+	this.state = {
+	    "value":props.url
+	}
+
+	this.handleChange = this.handleChange.bind(this);
+	this.handleSubmit = this.handleSubmit.bind(this);
+
+    }
+
+    handleChange(event) {
+	this.setState({value: event.target.value});
+    }
+
+    handleSubmit(event) {
+
+	event.preventDefault();
+
+	this.props.updateUrl(this.state.value);
+
+    }
+
     render() {
-	return (<div>
+	return (
+	        <form onSubmit={this.handleSubmit}>
+		<label>
+		API endpoint:
+	        <input type="text" value={this.state.value} onChange={this.handleChange} />
+		</label>
+		<input type="submit" value="Submit" />
+		</form>
+	);
+    }
+}
+
+
+class App extends Component {
+
+    constructor(props){
+	super(props);
+
+	this.state = {
+	    "url":"https://ctmirror.org/wp-json/wp/v2"
+	    // "url":"https://denverpost.com/wp-json/wp/v2"
+	}
+
+	this.updateUrl = this.updateUrl.bind(this)
+    }
+
+    updateUrl(url){
+	this.setState({"url":url});
+    }
+    
+    render() {
+	return (
+		<div>
 		<div className="top-bar">
 		<img src={window.location.origin + "/img/mirrorlogo.png"} alt="CT Mirror Logo"/> 
 		</div>
+		<UrlForm url={this.state.url} updateUrl={this.updateUrl}/>
 		<div className="center-column">
-		<StoryList url="https://ctmirror.org/wp-json/wp/v2/posts/?per_page=25"></StoryList>
+		<StoryList url={this.state.url}></StoryList>
 		</div>
 		</div>
-	);
+	       );
     }
 
     
