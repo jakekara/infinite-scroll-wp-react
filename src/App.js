@@ -15,9 +15,36 @@ class StoryList extends Component {
 	    "fetchedPages":[],
 	    "page":1,
 	    "posts":[],
-	    "readList":window.localStorage.getItem("readList") || {}
+	    "readList":window.localStorage.getItem("readList") || {},
+	    "categoryList":null
 	}
     }
+
+    categoryName(cid){
+
+	if (!this.state.categoryList){ return; }	
+
+	console.log(cid, this.state.categoryList.map( d => d.id) );
+	
+	var matches = this.state.categoryList.filter(d => d.id === cid);
+
+	if (matches.length !== 1){ return; }
+
+	return matches[0].name;
+
+    }
+
+    categoryNames(carray){
+	var that = this;
+	var ret =  carray.map(function(cid){
+	    return that.categoryName.call(that, cid);
+	});
+
+	if (ret.length < 1){ return ret; }
+	
+	return [ret[0]];
+    }
+    
 
     render(){
 
@@ -28,18 +55,27 @@ class StoryList extends Component {
 		{
 		    posts.map(
 			post =>
-			    <a href={post.link}>
-			      
-			    <div className="story-preview" key={post.id}>
+			    <div className="story-preview-container">
+
+			    <div className="story-preview" data-category={this.categoryNames(post.categories).join(" ")}>
+			    <div className="category-tag-container">
+			    <div className="category-tag">
+			    {this.categoryNames(post.categories).join(" ")}
+			</div>
+			    </div>
+			    <a key={post.id} href={post.link}>			    			    
 			    <div className="headline-group">
 			    <div className="read-status" />
 
 			    <span  className="headline" dangerouslySetInnerHTML={{ __html:post.title.rendered }} />
 			    </div>
+			    </a>			    
+			    
 			    <div className="dateline">{dateline(new Date(post.date))}</div>
 			    </div>
-			    </a>
-			      
+
+			</div>
+			    
 		    )
 		}
 	    </div>
@@ -56,7 +92,25 @@ class StoryList extends Component {
 			   "page":1});
 	}
 
-    }	
+    }
+
+    fetchCategories(){
+	this.setState({"categoryListIsLoading":true});
+
+	var url = this.props.url + "/categories?per_page=100";
+	console.log("CategoryList URL: " , url);
+
+	var that = this;
+	fetch(url)
+	    .then(response => response.json())
+	    .then(function(data){
+		console.log("fetched category list", data)
+		that.setState({
+		    "categoryList": data,
+		    "categoryListIsLoading":false
+		});
+	    });
+    }
 
     fetchStories(){
 
@@ -67,9 +121,9 @@ class StoryList extends Component {
 	}
 
 	var that = this;
-
 	var goodUrl = this.props.url + "/posts" + "?per_page=" + this.state.perPage + "&page=" + this.state.page;
 	console.log("url", goodUrl);
+	
 	fetch(goodUrl)
 	    .then(response => response.json())
 	    .then(function(data){
@@ -99,6 +153,7 @@ class StoryList extends Component {
     componentDidMount() {
 
 	this.fetchStories();
+	this.fetchCategories();
 
 	window.addEventListener('scroll', this.onScroll, false);
     }
@@ -141,7 +196,7 @@ class UrlForm extends Component {
 		<input type="submit" value="Update" />
 		<div className="hint">
 		(After change the API endpoint, start scrolling to fetch new stories)
-		</div>
+	    </div>
 		</form>
 	);
     }
@@ -177,7 +232,7 @@ class App extends Component {
 		<StoryList url={this.state.url}></StoryList>
 		</div>
 		</div>
-	       );
+	);
     }
 
     

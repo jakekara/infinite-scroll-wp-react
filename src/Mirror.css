@@ -31,10 +31,15 @@ a:hover .story-preview{
     line-height: 1.3em;
 }
 
+.story-preview-container {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
 .story-preview{
-    padding: 20px;
-    padding-bottom: 10px;
-    padding-top: 10px;
+    /* padding: 10px; */
+    /* padding-bottom: 10px; */
+    /* padding-top: 10px; */
     
     /* border-bottom: 1px solid #efefef; */
 }
@@ -49,7 +54,7 @@ a:hover .story-preview{
     max-height: 30px;
 }
 
-.dateline {
+.dateline, .category-tag {
     text-align: right;
     font-size: 14px;
     color: #aaa;
@@ -58,7 +63,10 @@ a:hover .story-preview{
 }
 
 .headline-group{
+    padding-top: 12px;
+    padding-bottom: 12px;
     display: flex;
+    font-size:22px;
     /* justify-content:space-between */
 }
 
@@ -92,3 +100,69 @@ a:hover .story-preview{
     font-size: 12px;
     color: gray;
 }
+
+.category-tag-container{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.category-tag{
+    text-align:right;
+    color: white;
+    position: static;
+    top: 0px;
+    left: 0px;
+    opacity:0.7;    
+}
+
+.category-tag:hover{
+    opacity:1;
+}
+
+.story-preview{
+    border-top: 1px solid gray;
+}
+
+[data-category="Health Care"] .story-preview{
+    border-top: 1px solid blue;
+}
+
+.category-tag{
+    background-color: gray;
+    padding: 0.2em;
+    border-radius: 0px 0px 3px 3px;
+}
+
+[data-category="Health Care"] .category-tag{
+    background-color: blue;
+}
+
+[data-category="Higher Education"] .category-tag{
+    background-color: magenta;
+}
+
+[data-category="Civil and criminal justice"] .category-tag{
+    background-color: magenta;
+}
+
+[data-category="Sunday reading"] .category-tag{
+    background-color: maroon;
+}
+
+
+
+[data-category="Economic Development"] .category-tag,
+[data-category="Budget/Economy"] .category-tag{
+    background-color: green;
+}
+
+[data-category="Politics"] .category-tag{
+    background-color: Orange;
+}
+
+[data-category="Immigration"] .category-tag,
+[data-category="Washington"] .category-tag{
+    background-color: Red;
+}
+
+
