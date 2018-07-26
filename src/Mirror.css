@@ -116,6 +116,7 @@ a:hover .story-preview{
 }
 
 .category-tag:hover{
+    cursor: pointer;
     opacity:1;
 }
 

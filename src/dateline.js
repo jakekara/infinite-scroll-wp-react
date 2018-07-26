@@ -1,8 +1,8 @@
 function dateline(dt){
 
-    var dayNames = ['Sunday', 'Monday', 'Tuesday',
-		    'Wednesday', 'Thursday', 'Friday',
-		    'Saturday'];
+    // var dayNames = ['Sunday', 'Monday', 'Tuesday',
+    // 		    'Wednesday', 'Thursday', 'Friday',
+    // 		    'Saturday'];
     var monthNames = ['Jan.', 'Feb.', 'March', 'April',
 		      'May', 'June', 'July', 'Aug.',
 		      'Sept.', 'Oct.', 'Nov.', 'Dec.'];

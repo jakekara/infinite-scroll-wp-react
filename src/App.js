@@ -121,7 +121,7 @@ class StoryList extends Component {
 	}
 
 	var that = this;
-	var goodUrl = this.props.url + "/posts" + "?per_page=" + this.state.perPage + "&page=" + this.state.page;
+	var goodUrl = this.props.url + "/posts?per_page=" + this.state.perPage + "&page=" + this.state.page;
 	console.log("url", goodUrl);
 	
 	fetch(goodUrl)
